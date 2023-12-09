@@ -4,21 +4,23 @@
   "description": "Este archivo se escribe en formato markdown.",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1"
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start":"nodemon index.js"
   },
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/RafaeldelRio/daweb.git"
+    "url": "git+https://github.com/batista28/repositorio-tarea-coche.git"
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
   "bugs": {
-    "url": "https://github.com/RafaeldelRio/daweb/issues"
+    "url": "https://github.com/batista28/repositorio-tarea-coche/issues"
   },
-  "homepage": "https://github.com/RafaeldelRio/daweb#readme",
+  "homepage": "https://github.com/batista28/repositorio-tarea-coche#readme",
   "dependencies": {
     "express": "^4.18.2",
-    "mongoose": "^8.0.2"
+    "mongodb": "^6.3.0",
+    "nodemon": "^3.0.2"
   }
 }
