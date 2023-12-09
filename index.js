@@ -2,10 +2,9 @@ const express = require("express");
 const { MongoClient } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
 
-
 const app = express();
 //sirve para poder utilizar json
-app.use(express.json())
+app.use(express.json());
 // Configuración de la conexión a MongoDB
 const mongoURI = "mongodb://localhost:27017/concesionario";
 const client = new MongoClient(mongoURI);
@@ -71,7 +70,6 @@ app.get("/concesionarios", async (request, response) => {
     } finally {
         await client.close();
     }
-
 });
 
 // Añadir un nuevo concesionario
@@ -106,7 +104,7 @@ app.get("/concesionarios/:id", async (request, response) => {
 
         // Buscamos el concesionario por su ID
         const result = await collection.findOne({ _id: id });
-        response.json(result)
+        response.json(result);
     } catch (error) {
         console.error("Error de conexión a la base de datos:", error.message);
         response.status(500).json({ error: "Error interno del servidor" });
@@ -117,7 +115,6 @@ app.get("/concesionarios/:id", async (request, response) => {
 // Actualizar un solo concesionario
 app.put("/concesionarios/:id", async (request, response) => {
     const id = new objectId(request.params.id);
-
 
     try {
         // Conectamos a la base de datos
@@ -174,11 +171,8 @@ app.get("/concesionarios/:id/coches", async (request, response) => {
         // Buscamos el concesionario por su ID
         const concesionario = await collection.findOne({ _id: id });
 
-
         // Devolvemos solo los coches del concesionario
         response.json({ coches: concesionario.coches });
-
-
     } catch (error) {
         console.error("Error de conexión a la base de datos:", error.message);
         response.status(500).json({ error: "Error interno del servidor" });
@@ -200,9 +194,7 @@ app.post("/concesionarios/:id/coches", async (request, response) => {
         // Agregamos un nuevo coche al concesionario por su ID
         const result = await collection.updateOne({ _id: id }, { $push: { coches: request.body } });
 
-
         response.json({ message: "Coche añadido correctamente al concesionario" });
-
     } catch (error) {
         console.error("Error de conexión a la base de datos:", error.message);
         response.status(500).json({ error: "Error interno del servidor" });
@@ -226,10 +218,9 @@ app.get("/concesionarios/:id/coches/:cocheid", async (request, response) => {
         const concesionario = await collection.findOne({ _id: concesionarioId });
 
         // Buscamos el coche por su ID en el array de coches del concesionario
-        const coche = concesionario.coches[cocheId]
+        const coche = concesionario.coches[cocheId];
 
         response.json(coche);
-
     } catch (error) {
         console.error("Error de conexión a la base de datos:", error.message);
         response.status(500).json({ error: "Error interno del servidor" });
@@ -250,19 +241,24 @@ app.put("/concesionarios/:id/coches/:cocheId", async (request, response) => {
         const collection = db.collection("concesionarios");
 
         const concesionario = await collection.findOne({ _id: concesionarioId });
-        const coche = concesionario.coches[cocheId]
-        // Actualizamos el coche por su ID en el array de coches del concesionario
+        const coche = concesionario.coches[cocheId];
+        ("Actualizamos el coche por su ID  en el array de coches del concesionario ");
         const result = await collection.updateOne(
             {
                 _id: concesionarioId,
-                "coches[cochesId]": concesionario.coche
+                coches: coche,
             },
-            { $set: { "coche.$.marca": request.body.marca, "coche.$.modelo": request.body.modelo, 
-            "coche.$.cv": request.body.cv, "coche.$.precio": request.body.precio } }
+            {
+                $set: {
+                    "coches.$.marca": request.body.marca,
+                    "coches.$.modelo": request.body.modelo,
+                    "coches.$.cv": request.body.cv,
+                    "coches.$.precio": request.body.precio,
+                },
+            }
         );
 
         response.json({ coche, message: "Coche actualizado correctamente en el concesionario" });
-
     } catch (error) {
         console.error("Error de conexión a la base de datos:", error.message);
         response.status(500).json({ error: "Error interno del servidor" });
@@ -270,9 +266,10 @@ app.put("/concesionarios/:id/coches/:cocheId", async (request, response) => {
         await client.close();
     }
 });
+
 // Eliminar un coche específico de un concesionario por ID
 app.delete("/concesionarios/:id/coches/:cocheId", async (request, response) => {
-    const concesionarioId = request.params.id;
+    const concesionarioId = new objectId(request.params.id);
     const cocheId = request.params.cocheId;
 
     try {
@@ -281,14 +278,14 @@ app.delete("/concesionarios/:id/coches/:cocheId", async (request, response) => {
         const db = client.db("concesionarios");
         const collection = db.collection("concesionarios");
 
+        const concesionario = await collection.findOne({ _id: concesionarioId });
         // Eliminamos el coche por su ID en el array de coches del concesionario
-        const result = await collection.updateOne({ id: concesionarioId }, { $pull: { coches: { id: cocheId } } });
+        const result = await collection.updateOne(
+            { _id: concesionarioId },
+            { $pull: { coches: concesionario.coches[cocheId] } }
+        );
 
-        if (result.modifiedCount > 0) {
-            response.json({ message: "Coche eliminado correctamente del concesionario" });
-        } else {
-            response.status(404).json({ error: "Coche no encontrado en el concesionario" });
-        }
+        response.json({ message: "Coche eliminado correctamente del concesionario" });
     } catch (error) {
         console.error("Error de conexión a la base de datos:", error.message);
         response.status(500).json({ error: "Error interno del servidor" });
