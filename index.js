@@ -1,10 +1,15 @@
 const express = require("express");
 const { MongoClient } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
+const swaggerUi = require("swagger-ui-express");
+const swaggerDocument = require("./swagger.json");
 
 const app = express();
 //sirve para poder utilizar json
 app.use(express.json());
+
+// Configuración de Swagger
+app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
 // Configuración de la conexión a MongoDB
 const mongoURI = "mongodb://localhost:27017/concesionario";
 const client = new MongoClient(mongoURI);
@@ -16,6 +21,7 @@ const port = process.env.PORT || 8080;
 app.listen(port, () => {
     console.log(`Servidor desplegado en puerto: ${port}`);
 });
+
 let concesionarios = [
     {
         nombre: "Martinez",
@@ -279,7 +285,7 @@ app.delete("/concesionarios/:id/coches/:cocheId", async (request, response) => {
         const collection = db.collection("concesionarios");
 
         const concesionario = await collection.findOne({ _id: concesionarioId });
-        // Eliminamos el coche por su ID en el array de coches del concesionario
+
         const result = await collection.updateOne(
             { _id: concesionarioId },
             { $pull: { coches: concesionario.coches[cocheId] } }
