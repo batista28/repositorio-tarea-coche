@@ -3,13 +3,14 @@ const { MongoClient } = require("mongodb");
 const objectId = require("mongodb").ObjectId;
 const swaggerUi = require("swagger-ui-express");
 const swaggerDocument = require("./swagger.json");
-
 const app = express();
+const helmet = require("helmet");
 //sirve para poder utilizar json
 app.use(express.json());
 
 // Configuración de Swagger
 app.use("/api-docs", swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use(helmet());
 // Configuración de la conexión a MongoDB
 const mongoURI = "mongodb://localhost:27017/concesionario";
 const client = new MongoClient(mongoURI);

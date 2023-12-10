@@ -20,8 +20,14 @@
   "homepage": "https://github.com/batista28/repositorio-tarea-coche#readme",
   "dependencies": {
     "express": "^4.18.2",
+    "helmet": "^7.1.0",
     "mongodb": "^6.3.0",
     "nodemon": "^3.0.2",
     "swagger-ui-express": "^5.0.0"
+  },
+  "devDependencies": {
+    "eslint": "^8.55.0",
+    "eslint-config-airbnb-base": "^15.0.0",
+    "eslint-plugin-import": "^2.29.0"
   }
 }

@@ -15,30 +15,44 @@
                 "direccion": {
                     "type": "string"
                 },
-                "coches": {
+
+                "Coche": {
                     "type": "object",
                     "properties": {
-                        "Coche": {
-                            "type": "object",
-                            "properties": {
-                                "marca": {
-                                    "type": "string"
-                                },
-                                "modelo": {
-                                    "type": "string"
-                                },
-                                "cv": {
-                                    "type": "integer"
-                                },
-                                "precio": {
-                                    "type": "integer"
-                                }
-                            },
-                            "required": ["marca", "modelo", "cv", "precio"]
+                        "marca": {
+                            "type": "string"
+                        },
+                        "modelo": {
+                            "type": "string"
+                        },
+                        "cv": {
+                            "type": "integer"
+                        },
+                        "precio": {
+                            "type": "integer"
                         }
-                    }
+                    },
+                    "required": ["marca", "modelo", "cv", "precio"]
                 }
             }
+        },
+        "Coche": {
+            "type": "object",
+            "properties": {
+                "marca": {
+                    "type": "string"
+                },
+                "modelo": {
+                    "type": "string"
+                },
+                "cv": {
+                    "type": "integer"
+                },
+                "precio": {
+                    "type": "integer"
+                }
+            },
+            "required": ["marca", "modelo", "cv", "precio"]
         }
     },
     "paths": {
